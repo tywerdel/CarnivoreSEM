@@ -81,41 +81,13 @@ samplist <- list(Site1,	Site2,	Site3,	Site4,	Site5,	Site6,	Site7,	Site8,	Site9,	
      Site371,	Site372,	Site373,	Site374,	Site375,	Site376,	Site377,	Site378,	Site379,	Site380,
      Site381)
 
+
+####Run chao estimates 
 #use purrr package to iterate through all estimates of chao2
 #this needs to be cleared before each run so you have an empty data frame
-chao2bc = data.frame()
-chao2se = data.frame()
-chao2lo = data.frame()
-chao2up = data.frame()
-
-for (i in 1:381) {
-  
-  tryCatch({
-  
-  esite <- as.data.frame(samplist[i])
-  
-  out1 =tryCatch(ChaoSpecies(esite,datatype = "incidence_raw", k = 10, conf= 0.95))
-  
- 
-  print(i)
-  }, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
-  
-  #create list of chao2bc estimates [3,1], se [3,2], 95 lower [3,3], 95 upper [3,4]
-  chao2bc = rbind(chao2bc,out1$Species_table[3,1])
-  chao2se = rbind(chao2se,out1$Species_table[3,2])
-  chao2lo = rbind(chao2lo,out1$Species_table[3,3])
-  chao2up = rbind(chao2up,out1$Species_table[3,4])
-}
-
-result <-cbind(chao2bc,chao2se,chao2lo,chao2up)
-colnames(result) <- c("chao2","chao2se","chao2lo","chao2up")
-
-result
-write.csv(result, "chao2bc_results.csv")
-
-####Run chao estimates with different package (No Errors)
 
 chao2fossil = data.frame()
+
 for (i in 1:381) {
     
     esite <- as.data.frame(samplist[i])
@@ -125,5 +97,5 @@ for (i in 1:381) {
   #create list of chao2 estimates
     chao2fossil = rbind(chao2fossil,out1)
 }
-
-write.csv(chao2fossil, "chao2_fossil_results.csv")
+chao2fossil
+#write.csv(chao2fossil, "chao2_fossil_results.csv")
